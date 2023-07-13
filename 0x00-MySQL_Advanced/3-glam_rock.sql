@@ -9,5 +9,5 @@
 -- Your script can be executed on any database
 SELECT band_name, IF(split = 0, 2022 - formed, split - formed) AS lifespan
 FROM metal_bands
-WHERE style = 'Glam rock'
+WHERE style like '%Glam rock%'
 ORDER BY lifespan DESC;
