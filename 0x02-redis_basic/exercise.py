@@ -7,6 +7,7 @@ from typing import Union, Callable
 import uuid
 from functools import wraps
 
+
 def count_calls(method: Callable) -> Callable:
     """
     function that create a function and returns how many times the function
@@ -40,9 +41,6 @@ def call_history(method: Callable) -> Callable:
 
         return output
     return wrapper
-
-
-
 
 class Cache:
     """
