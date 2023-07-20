@@ -3,7 +3,7 @@
 writing a string to redis
 """
 import redis
-from typing import Union Callable
+from typing import Union, Callable
 import uuid
 
 
@@ -26,7 +26,7 @@ class Cache:
         self._redis.mset({key: data})
         return key
 
-    def get(key: str, fn: Callable=None) -> Union[str, float, int, bytes]:
+    def get(self, key: str, fn: Callable=None) -> Union[str, float, int, bytes]:
         """
         takes a key string and a function and converts the data back
         to the desired format"""
@@ -39,6 +39,6 @@ class Cache:
         return self.get(key, lambda x: x.decode("utf-8"))
 
     def get_int(self, key: str) -> int:
-        "takes a key and retrieves the value from the Redis
-        database"
+        """takes a key and retrieves the value from the Redis
+        database"""
         return self.get(key, lambda x: int(x.decode("utf-8")))
