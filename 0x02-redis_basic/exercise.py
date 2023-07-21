@@ -20,6 +20,7 @@ def count_calls(method: Callable) -> Callable:
         return method(self, *args, **kwargs)
     return wrapper
 
+
 def call_history(method: Callable) -> Callable:
     """
     function that creates a function that stores the history
@@ -35,12 +36,13 @@ def call_history(method: Callable) -> Callable:
         # store input arguments of the method
         self._redis.rpush(input_field, str(args))
 
-        #execute the original function and store its output
+        # execute the original function and store its output
         output = method(self, *args, **kwargs)
         self._redis.rpush(output_field, str(output))
 
         return output
     return wrapper
+
 
 class Cache:
     """
@@ -63,7 +65,8 @@ class Cache:
         self._redis.set(key, data)
         return key
 
-    def get(self, key: str, fn: Callable=None) -> Union[str, float, int, bytes]:
+    def get(self, key: str,
+            fn: Callable = None) -> Union[str, float, int, bytes]:
         """
         takes a key string and a function and converts the data back
         to the desired format"""
@@ -79,3 +82,22 @@ class Cache:
         """takes a key and retrieves the value from the Redis
         database"""
         return self.get(key, lambda x: int(x.decode("utf-8")))
+
+
+def replay(method: Callable):
+    """
+        function to display the history of calls of a particular function
+    """
+    redis_instance = method.__self__._redis
+    input_key = "{}:inputs".format(method.__qualname__)
+    output_key = "{}:outputs".format(method.__qualname__)
+
+    inputs = redis_instance.lrange(input_key, 0, -1)
+    outputs = redis_instance.lrange(output_key, 0, -1)
+    num_calls = len(inputs)
+    print(f"{method.__qualname__} was called {num_calls} times:")
+
+    for args, output in zip(inputs, outputs):
+        args_str = args.decode("utf-8")
+        output_ = output.decode("utf-8")
+        print(f"{method.__qualname__}(*{args_str}) -> {output_}")
