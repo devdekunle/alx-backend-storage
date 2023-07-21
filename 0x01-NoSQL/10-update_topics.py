@@ -10,10 +10,11 @@ topics (list of strings) will be the list of
 topics approached in the school
 """
 
+
 def update_topics(mongo_collection, name, topics):
-        """
-        updates a document
-        """
-        mongo_collection.update_many(
-            {"name": name},
-            {"$set": {"topics": topics}})
+    """
+    updates a document
+    """
+    mongo_collection.update_many(
+        {"name": name},
+        {"$set": {"topics": topics}})
