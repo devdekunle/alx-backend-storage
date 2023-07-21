@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """
 we will implement a get_page function
 (prototype: def get_page(url: str) -> str:).
@@ -31,17 +31,17 @@ def get_page(url: str) -> str:
     # create a redis instance
     redis_client = redis.Redis()
 
-    #check if url is already cached
+    # check if url is already cached
     cached_content = redis_client.get(url)
     if cached_content:
         return cached_content
 
-    #get url html content
+    # get url html content
     page = requests.get(url)
 
     page_content = page.text
 
-    #cache content and set an expiry time
+    # cache content and set an expiry time
     redis_client.setex(url, 10, page_content)
 
     # get number of time url is accessed
